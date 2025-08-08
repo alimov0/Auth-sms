@@ -6,7 +6,7 @@ use App\Services\AuthService;
 
 class CleanUnverifiedUsersCommand extends Command
 {
-    protected $signature = 'users:clean-unverified';qqqqqqqqqqqqqqqqq
+    protected $signature = 'users:clean-unverified';qqqqqqqqqqqqqqqq
     protected $description = 'Deletes users who are not verified within 3 days';
 
     protected AuthService $authService;
