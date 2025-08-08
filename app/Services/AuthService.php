@@ -52,14 +52,14 @@ class AuthService implements AuthServiceInterface
 
         if (!$user) {
             return response()->json([
-                'status' => 'error',
+                'status' => 'success',
                 'message' => 'User not found.',
             ], 404);
         }
 
         if (!$user->is_verified) {
             return response()->json([
-                'status' => 'error',
+                'status' => 'success',
                 'message' => 'Phone number not verified.',
             ], 403);
         }
@@ -67,7 +67,7 @@ class AuthService implements AuthServiceInterface
         $cacheKey = 'sms_code_' . $user->phone;
         if (Cache::has($cacheKey)) {
             return response()->json([
-                'status' => 'error',
+                'status' => 'success',
                 'message' => 'Please wait before requesting another code.',
             ], 429);
         }
@@ -89,7 +89,7 @@ class AuthService implements AuthServiceInterface
 
         if (Cache::has($cacheKey)) {
             return response()->json([
-                'status' => 'error',
+                'status' => 'success',
                 'message' => 'Please wait before requesting another code.',
             ], 429);
         }
@@ -111,7 +111,7 @@ class AuthService implements AuthServiceInterface
 
         if (Cache::has($cacheKey)) {
             return response()->json([
-                'status' => 'error',
+                'status' => 'success',
                 'message' => 'Code already sent. Try again after 1 minute.',
             ], 429);
         }
@@ -134,7 +134,7 @@ class AuthService implements AuthServiceInterface
 
         if (!$cachedCode || $cachedCode != $dto->code) {
             return response()->json([
-                'status' => 'error',
+                'status' => 'success',
                 'message' => 'Invalid or expired code.',
             ], 400);
         }
