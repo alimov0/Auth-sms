@@ -4,21 +4,23 @@ namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
-use Illuminate\Notifications\Messages\NexmoMessage;
 
 class SendSmsCode extends Notification
 {
     use Queueable;
 
-    public function __construct(protected int $code) {}
+    public function __construct(protected string $text, protected string $phone) {}
 
     public function via($notifiable): array
     {
-        return ['nexmo'];
+        return ['sms'];
     }
 
-    public function toNexmo($notifiable): NexmoMessage
+    public function toSms($notifiable): array
     {
-        return (new NexmoMessage)->content("Your verification code is: {$this->code}");
+        return [
+            'phone' => $this->phone,
+            'text'  => $this->text,
+        ];
     }
 }

@@ -4,10 +4,16 @@ namespace App\DTO\Auth;
 
 class ChangePhoneRequestDTO
 {
-    public string $new_phone;
+    public function __construct(
+        public readonly int $userId,
+        public readonly string $newPhone
+    ) {}
 
-    public function __construct(array $data)
+    public static function fromRequest(int $userId, array $data): self
     {
-        $this->new_phone = $data['new_phone'];
+        return new self(
+         $userId,
+         $data['phone']
+        );
     }
 }

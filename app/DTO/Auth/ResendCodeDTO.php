@@ -1,13 +1,17 @@
-<?php 
+<?php
 
 namespace App\DTO\Auth;
 
 class ResendCodeDTO
 {
-    public string $phone;
+    public function __construct(
+        public readonly string $phone
+    ) {}
 
-    public function __construct(array $data)
+    public static function fromRequest(array $data): self
     {
-        $this->phone = $data['phone'];
+        return new self(
+            phone: $data['phone']
+        );
     }
 }

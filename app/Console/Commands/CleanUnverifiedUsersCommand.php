@@ -1,26 +1,23 @@
 <?php
+
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\Services\AuthService;
+use App\Interfaces\Services\AuthServiceInterface;
 
 class CleanUnverifiedUsersCommand extends Command
 {
-    protected $signature = 'users:clean-unverified';
-    protected $description = 'Deletes users who are not verified within 3 days';
+    protected $signature = 'users:cleanup';
+    protected $description = 'Delete unverified users older than 3 days';
 
-    protected AuthService $authService;
-
-    public function __construct(AuthService $authService)
+    public function __construct(protected AuthServiceInterface $authService)
     {
         parent::__construct();
-        $this->authService = $authService;
     }
 
-    public function handle(): int
+    public function handle()
     {
-        $this->authService->cleanUnverifiedUsers();
-        $this->info('Unverified users cleaned.');
-        return 0;
+        $deleted = $this->authService->cleanUp();
+        $this->info("Deleted {$deleted} unverified users.");
     }
 }

@@ -2,48 +2,58 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Pagination\LengthAwarePaginator;
+
 abstract class Controller
 {
     protected function success($data = [], string $message = 'Operation successful', int $status = 200)
     {
         return response()->json([
-            'status' => 'success',
+            'success' => true,
+            'status'  => $status,
             'message' => $message,
-            'data' => $data,
+            'data'    => $data ?? (object)[], // doim object qaytadi
+            'errors'  => null,
         ], $status);
     }
+
     protected function responsePagination($paginator, $data = [], string $message = 'Operation successful', int $status = 200)
     {
-        // Check if the first parameter is a paginator
-        if ($paginator instanceof \Illuminate\Pagination\LengthAwarePaginator) {
+        $pagination = null;
+
+        if ($paginator instanceof LengthAwarePaginator) {
             $pagination = [
                 'current_page' => $paginator->currentPage(),
-                'total_pages' => $paginator->lastPage(),
-                'total' => $paginator->total(),
-                'per_page' => $paginator->perPage(),
-                'links' => [
+                'total_pages'  => $paginator->lastPage(),
+                'total'        => $paginator->total(),
+                'per_page'     => $paginator->perPage(),
+                'links'        => [
                     'first' => $paginator->url(1),
-                    'last' => $paginator->url($paginator->lastPage()),
-                    'prev' => $paginator->previousPageUrl(),
-                    'next' => $paginator->nextPageUrl(),
+                    'last'  => $paginator->url($paginator->lastPage()),
+                    'prev'  => $paginator->previousPageUrl(),
+                    'next'  => $paginator->nextPageUrl(),
                 ]
             ];
-        } else {
-            $pagination = null; // No pagination if not a paginated result
         }
 
         return response()->json([
-            'status' => 'success',
-            'message' => $message,
-            'data' => $data,
-            'pagination' => $pagination, // Now pagination will not be null if it's a paginated result
+            'success'    => true,
+            'status'     => $status,
+            'message'    => $message,
+            'data'       => $data,
+            'pagination' => $pagination,
+            'errors'     => null,
         ], $status);
     }
-    protected function error(string $message = 'An error occurred', int $status = 400)
+
+    protected function error(string $message = 'An error occurred', int $status = 400, array $errors = [])
     {
         return response()->json([
-            'status' => 'error',
+            'success' => false,
+            'status'  => $status,
             'message' => $message,
+            'data'    => (object)[], // doim object qaytadi
+            'errors'  => !empty($errors) ? $errors : null,
         ], $status);
     }
 }

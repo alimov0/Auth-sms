@@ -4,7 +4,7 @@ namespace App\Http\Requests\Auth;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ConfirmPhoneChangeRequest extends FormRequest
+class VerifyCodeRequest extends FormRequest
 {
     public function authorize(): bool
     {
@@ -14,8 +14,8 @@ class ConfirmPhoneChangeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'new_phone' => 'required|string',
-            'code' => 'required|digits:5'
+            'phone' => ['required', 'string', 'exists:users,phone'],
+            'code'  => ['required', 'string', 'size:5'],
         ];
     }
 }

@@ -8,3 +8,4 @@ Artisan::command('inspire', function () {
 })->purpose('Display an inspiring quote');
 
 Schedule::command('users:clean-unverified')->daily();
+Schedule::job(new \App\Jobs\DeleteUnverifiedUsersJob)->daily();

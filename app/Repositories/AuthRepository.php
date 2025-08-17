@@ -21,7 +21,21 @@ class AuthRepository implements AuthRepositoryInterface
             'last_name' => $dto->last_name,
             'phone' => $dto->phone,
             'avatar' => $avatarPath,
-            'is_verified' => false,
+            'is_verified' => true,
         ]);
+     }
+    
+     public function findByPhone(string $phone): ?User
+    {
+        return User::where('phone', $phone)->first();
     }
-}
+
+    public function markVerified(User $user): User
+    {
+        $user->is_verified = true;
+        $user->save();
+        return $user;
+    }
+
+
+    }

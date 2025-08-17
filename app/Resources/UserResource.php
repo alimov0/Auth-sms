@@ -1,19 +1,19 @@
 <?php
 
-namespace App\Resources;
+namespace App\Http\Resources;
+
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class UserResource extends JsonResource
 {
-    public function toArray($request)
+    public function toArray($request): array
     {
         return [
-            'id' => $this->id,
-            'name' => $this->name,
-            'last_name' => $this->last_name,
+            'id'    => $this->id,
+            'name'  => $this->name,
             'phone' => $this->phone,
-            'avatar' => $this->avatar,
-            'is_verified' => $this->is_verified,
+            'avatar'=> $this->avatar,
+            'is_verified' => (bool) $this->is_verified,
         ];
     }
 }
