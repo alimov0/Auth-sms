@@ -1,26 +1,33 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\ProductController;   
+use App\Http\Controllers\Api\OrderController;     
+use App\Http\Controllers\Api\PaymentController;   
 use App\Http\Controllers\Api\AuthController;
-Route::prefix('auth')->group(function () {
-    //  Ro‘yxatdan o‘tish
-    Route::post('/register', [AuthController::class, 'register']);
 
-    //  Ro‘yxatni tasdiqlash kodi
-    Route::post('/verify', [AuthController::class, 'verify']);
+//  Auth 
+Route::post('/auth/register', [AuthController::class, 'register']);
+Route::post('/auth/verify',   [AuthController::class, 'verify']);
+Route::post('/auth/login/send-code',   [AuthController::class, 'sendCode']);
+Route::post('/auth/login/verify-code', [AuthController::class, 'verifyCode']);
+Route::post('/auth/resend-code',       [AuthController::class, 'resendCode']);
+Route::post('/auth/change-phone',      [AuthController::class, 'changePhone'])->middleware('auth:sanctum');
+Route::post('/auth/confirm-phone',     [AuthController::class, 'confirmPhone'])->middleware('auth:sanctum');
 
-    //  Login uchun kod yuborish
-    Route::post('/send-code', [AuthController::class, 'sendCode']);
+// Products
+Route::get('/products',        [ProductController::class, 'index']);  
+Route::get('/products/{product}', [ProductController::class, 'show']);
 
-    //  Login kodini tasdiqlash
-    Route::post('/verify-code', [AuthController::class, 'verifyCode']);
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/products',                    [ProductController::class, 'store']);   
+    Route::put('/products/{product}',           [ProductController::class, 'update']);  
+    Route::delete('/products/{product}',        [ProductController::class, 'destroy']); 
 
-    //  Kodni qayta yuborish
-    Route::post('/resend-code', [AuthController::class, 'resendCode']);
-
-    //  Raqamni yangilash
-    Route::post('/change-phone', [AuthController::class, 'changePhone']);
-
-    //  Yangi raqamni tasdiqlash
-    Route::post('/confirm-phone', [AuthController::class, 'confirmPhone']);
+    //  Orders
+    Route::post('/orders',                      [OrderController::class, 'store']);     
+    Route::get('/orders/{order}',               [OrderController::class, 'show']);      
 });
+
+//  Payme callback (auth talab qilinmaydi — Payme serveri uradi)
+Route::post('/payments/payme/callback', [PaymentController::class, 'paymeCallback']); 
